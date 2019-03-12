@@ -4,7 +4,9 @@ const isAuthenticated = require('../../auth/auth.service');
 
 const router = express.Router();
 
+router.get('/:MobileNumber', controller.GetUserDataByMobileNumber); // no authrization
 router.post('/', controller.create); // no authrization
+
 router.patch('/', isAuthenticated.isAuthenticated, controller.update);
 router.post('/otp', controller.userOTP); // no authrization
 router.patch('/updatepassword', controller.updatePassword); // no authrization

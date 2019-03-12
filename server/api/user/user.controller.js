@@ -73,8 +73,10 @@ function checkUserExist(user) {
     });
   });
 }
+
 export function decodePassword(password) {
-  const key = crypto.createCipher(process.env.CRYPTO_ALGO, 'abc');// abc replace by some data
+  // const key = crypto.createCipher(process.env.CRYPTO_ALGO, 'abc');// abc replace by some data
+  const key = crypto.createCipher('aes-128-cbc', 'abc');// abc replace by some data
   let newPassword = key.update(password, 'utf8', 'hex');
   newPassword += key.final('hex');
   return newPassword;
@@ -113,7 +115,8 @@ export function create(req, res) {
     const user = result;
     user.Password = null;
     user.IsActive = null;
-    jwt.sign({ user }, process.env.JWT_SECKERT_KEY, (err, token) => {
+    // jwt.sign({ user }, process.env.JWT_SECKERT_KEY, (err, token) => {
+    jwt.sign({ user }, 'seckertkey', (err, token) => {
       if (err) {
         return res.send({ status: false, msg: 'Something went wrong', data: user });
       }
@@ -253,6 +256,8 @@ export function get(req, res) {
   //   return res.send({ status: false, msg: 'Account not Found', data: null });
   // });
 }
+
+
 export function userOTP(req, res) {
   console.log(req.body);
   if (req.body.isSendOTP) {
@@ -268,7 +273,8 @@ export function userOTP(req, res) {
       country_code: req.body.code,
       phone_number: req.body.phone,
       code_length: 4,
-    }, { headers: { 'X-Authy-API-Key': process.env.OTP_SECURITY_API_KEY } })
+    // }, { headers: { 'X-Authy-API-Key': process.env.OTP_SECURITY_API_KEY } })
+    }, { headers: { 'X-Authy-API-Key': 'Tdzm51468GNJZO07rvzLIy0Ljb8T60Lc' } })
       .then(response => res.send({ status: true, msg: 'OTP is send on Phone number', data: req.body }))
       .catch((err) => {
         console.log(err);
@@ -277,13 +283,21 @@ export function userOTP(req, res) {
 
     // });
   } else {
-    axios.get(`https://api.authy.com/protected/json/phones/verification/check?X-Authy-API-Key=
-  ${process.env.OTP_SECURITY_API_KEY}&phone_number=
+  //   axios.get(`https://api.authy.com/protected/json/phones/verification/check?X-Authy-API-Key=
+  // ${process.env.OTP_SECURITY_API_KEY}&phone_number=
+  // ${req.body.phone}&country_code=${req.body.code}&verification_code=${req.body.otp}`,
+  //   { headers: { 'X-Authy-API-Key': process.env.OTP_SECURITY_API_KEY } })
+  //     .then(response => res.send({ status: true, msg: 'OTP is correct', data: req.body }))
+  //     .catch(err => res.send({ status: false, msg: 'OTP is wrong', data: null }));
+
+
+
+axios.get(`https://api.authy.com/protected/json/phones/verification/check?X-Authy-API-Key=
+  ${'Tdzm51468GNJZO07rvzLIy0Ljb8T60Lc'}&phone_number=
   ${req.body.phone}&country_code=${req.body.code}&verification_code=${req.body.otp}`,
-    { headers: { 'X-Authy-API-Key': process.env.OTP_SECURITY_API_KEY } })
+    { headers: { 'X-Authy-API-Key': 'Tdzm51468GNJZO07rvzLIy0Ljb8T60Lc' } })
       .then(response => res.send({ status: true, msg: 'OTP is correct', data: req.body }))
       .catch(err => res.send({ status: false, msg: 'OTP is wrong', data: null }));
-
 
     // RedisClient.get(`OTP${req.body.code}${req.body.phone}`, (err, otp) => {
     //   if (err) {
@@ -296,6 +310,20 @@ export function userOTP(req, res) {
     // });
   }
 }
+
+
+
+
+exports.GetUserDataByMobileNumber = function (req, res, next) {
+ Users.findOne({ MobileNumber: req.params.MobileNumber}).exec((err, user) => {
+      if (err) return res.status(201).json({ success: false, message: 'Something went worng!' });
+      if (!user) return res.status(201).json({ success: false, message: 'Not Found!' });
+      return res.status(200).send(user);
+    });
+};
+
+
+
 export function updatePassword(req, res) {
   const user = {
     Password: decodePassword(req.body.password),

@@ -77,3 +77,12 @@ export function profile(req, res) {
     });
   });
 }
+
+
+
+exports.LikePerson = function(req, res, next) {
+    User.findOne({MobileNumber: req.params.MobileNumber}, (err, user) => {
+        if (err)return res.status(403).send(err);
+        
+    })
+};

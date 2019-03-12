@@ -6,9 +6,9 @@ const isAuthenticated = require('../../auth/auth.service');
 
 const router = express.Router();
 
-router.get('/', controller.GetAllImage); // no authrization
-router.get('/:id', controller.GetAllImageById); // no authrization
-router.post('/', upload.single('image'), controller.create); // no authrization
+router.get('/get-image-by-id/:id', controller.GetImageById); // no authrization
+router.get('/:MobileNumber', controller.GetAllImageByMobileNumber); // no authrization
+router.put('/:MobileNumber', upload.single('image'), controller.create); // no authrization
 router.delete('/:id', controller.deleteImgById); // no authrization
 
 module.exports = router;

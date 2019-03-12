@@ -26,12 +26,14 @@ const userSchema = mongoose.Schema({
   Profile: { type: String },
   Images: [{
     filename: String,
-    originalName: String,
-    originalName: String,
-    indexNumber: String,
+    originalname: String,
+    // indexNumber: String,
     profile: { type: Boolean, default: false },
     created: { type: Date, default: Date.now }
   }],
+
+  liked: [{ MobileNumber : String }]
+
 });
 
 

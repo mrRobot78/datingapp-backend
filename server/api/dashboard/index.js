@@ -6,4 +6,8 @@ const router = express.Router();
 
 router.get('/:lat/:long', isAuthenticated.isAuthenticated, controller.profile);
 
+
+router.post('/liked/:MobileNumber', controller.LikePerson);
+
+
 module.exports = router;

@@ -16,7 +16,8 @@ export function index(req, res) {
       if (user.Password === decodePassword(req.body.password)) {
         delete user.Password;
         delete user.IsActive;
-        jwt.sign({ user }, process.env.JWT_SECKERT_KEY, (err, token) => {
+        // jwt.sign({ user }, process.env.JWT_SECKERT_KEY, (err, token) => {
+        jwt.sign({ user }, 'seckertkey', (err, token) => {
           if (err) {
             return res.send({ status: false, msg: 'Something went wrong', data: user });
           }
