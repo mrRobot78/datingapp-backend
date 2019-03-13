@@ -80,9 +80,26 @@ export function profile(req, res) {
 
 
 
+exports.GetAllUser = function(req, res) {
+  console.log('dsvsdvsdvsdv')
+    Users.find({}, (err, user) => {
+      if (err)return res.status(403).send(err);
+      if (!user) return res.status(201).json({ success: false, message: 'Not Found!' });
+      return res.status(200).json({ success: true, user });
+    })
+};
+
+
 exports.LikePerson = function(req, res, next) {
-    User.findOne({MobileNumber: req.params.MobileNumber}, (err, user) => {
+    Users.findOne({MobileNumber: req.params.MobileNumber}, (err, user) => {
         if (err)return res.status(403).send(err);
         
     })
 };
+
+
+
+
+
+
+

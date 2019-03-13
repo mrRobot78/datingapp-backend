@@ -15,6 +15,7 @@ export var imageSchema = new mongoose.Schema({
     originalName: String,
     originalName: String,
     indexNumber: String,
+    url: String,
     profile: { type: Boolean, default: false },
     created: { type: Date, default: Date.now }
 });

@@ -38,6 +38,7 @@ var newUserImgGallery = {
     filename:  req.file.filename,
     originalname: req.file.originalname,
     MobileNumber: req.body.MobileNumber
+    // url: req.body.MobileNumber
     // indexNumber: req.body.indexNumber,
 };
 console.log(req.file)
