@@ -221,6 +221,8 @@ export function update(req, res) {
   // DB.ref(`server/users/${req.body.phone}`).update(user);
   // res.send({ status: true, msg: 'Profile Updated Suceesfully', data: null });
 }
+
+
 export function get(req, res) {
   Users.findById(req.authData._id, { _id: 0, Password: 0, IsActive: 0 }).then((user) => {
     if (user.Images.length > 0) {

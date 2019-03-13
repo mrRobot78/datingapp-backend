@@ -1,5 +1,5 @@
 
-import UserDiscoverySetup from './UserDiscoverySetup.model';
+import UserDiscoverySetup from './userDiscoverySetup.model';
 
 
 
