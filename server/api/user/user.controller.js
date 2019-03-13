@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import async from 'async';
+import UserDiscoverySetup from '../userDiscoverySetup/userDiscoverySetup.model';
 
 import DB from '../../config/firebase';
 
@@ -176,48 +177,75 @@ export function create(req, res) {
   // });
 }
 export function update(req, res) {
-  console.log('update', req.body);
-  console.log('update', req.authData);
-  const user = {
-    Name: req.body.name,
-    Gender: req.body.gender,
-    DOB: req.body.DOB,
-    InterestedIn: req.body.interest,
-    School: req.body.school,
-    Company: req.body.company,
-    Job: req.body.job,
-  };
-  if (!user.InterestedIn) {
-    delete user.InterestedIn;
-  }
-  if (!user.Name) {
-    delete user.Name;
-  }
-  if (!user.Gender) {
-    delete user.Gender;
-  }
-  if (!user.DOB) {
-    delete user.DOB;
-  }
-  if (!user.School) {
-    delete user.School;
-  }
-  if (!user.Company) {
-    delete user.Company;
-  }
-  if (!user.Job) {
-    delete user.Job;
-  }
-  const condition = { _id: req.authData._id };
-  Users.findOneAndUpdate(condition, user, { new: true }).then((result) => {
-    const userResult = result;
-    userResult.Password = null;
-    userResult._id = null;
-    userResult.IsActive = null;
-    return res.send({ status: true, msg: 'Profile Updated Successfully', data: userResult });
-  }).catch((err) => {
-    console.log(err);
+  async.waterfall([
+      function(done) {
+        console.log('update', req.body);
+        console.log('update', req.authData);
+        const user = {
+          Name: req.body.name,
+          Gender: req.body.gender,
+          DOB: req.body.DOB,
+          InterestedIn: req.body.interest,
+          School: req.body.school,
+          Company: req.body.company,
+          Job: req.body.job,
+        };
+        if (!user.InterestedIn) {
+          delete user.InterestedIn;
+        }
+        if (!user.Name) {
+          delete user.Name;
+        }
+        if (!user.Gender) {
+          delete user.Gender;
+        }
+        if (!user.DOB) {
+          delete user.DOB;
+        }
+        if (!user.School) {
+          delete user.School;
+        }
+        if (!user.Company) {
+          delete user.Company;
+        }
+        if (!user.Job) {
+          delete user.Job;
+        }
+        const condition = { _id: req.authData._id };
+        Users.findOneAndUpdate(condition, user, { new: true }).then((result) => {
+          const userResult = result;
+          userResult.Password = null;
+          userResult._id = null;
+          userResult.IsActive = null;
+          // return res.send({ status: true, msg: 'Profile Updated Successfully', data: userResult });
+            done(null, userResult);
+        }).catch((err) => {
+          // console.log(err);
+          res.status(201).json({ success: false, message: 'Something went worng!' });
+        });
+      },
+  // ----------------------------------------------------------------------------//
+      function(userResult, done) {
+        // Create a new image model and fill the properties
+        let newUserDiscoverySetup = new UserDiscoverySetup();
+        newUserDiscoverySetup.MobileNumber = userResult.MobileNumber;
+        newUserDiscoverySetup.MinDistance = '0';
+        newUserDiscoverySetup.MaxDistance = '0';
+        newUserDiscoverySetup.MinAge = '0';
+        newUserDiscoverySetup.MaxAge = '0';
+        newUserDiscoverySetup.Language = '';
+        // newUserDiscoverySetup.CurrLoc = [req.body.curr_lat, req.body.curr_lng];
+        newUserDiscoverySetup.save(err => {
+            if (err)return res.sendStatus(400);
+          return res.send({ status: true, msg: 'Profile Updated Successfully', data: userResult });
+        });
+      },
+    ], function(err) {
+      if (err) return next(err);
   });
+
+
+ 
   // DB.ref(`server/users/${req.body.phone}`).update(user);
   // res.send({ status: true, msg: 'Profile Updated Suceesfully', data: null });
 }

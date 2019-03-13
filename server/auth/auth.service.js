@@ -15,7 +15,8 @@ export function isAuthenticated(req, res, next) {
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ');
     const token = bearer[1];
-    jwt.verify(token, process.env.JWT_SECKERT_KEY, (err, authData) => {
+    // jwt.verify(token, process.env.JWT_SECKERT_KEY, (err, authData) => {
+    jwt.verify(token, 'seckertkey', (err, authData) => {
       if (err || typeof authData === 'undefined') {
         res.status(401).json({ success: false, msg: 'Unauthorised access3' });
       } else {
