@@ -2,7 +2,7 @@ import UserImgGallery from './userImgGallery.model';
 import * as path from 'path'
 import * as fs from 'fs'
 import  del from 'del';
-export let UPLOAD_PATH = 'uploads'
+export let UPLOAD_PATH = '../../../uploads';
 const User = require('../user/user.model');
  
 // // Upload a new image with description
@@ -113,7 +113,7 @@ var image = images.find(image => image._id == imgId);
 console.log(image)
 
         res.setHeader('Content-Type', 'image/jpeg');
-        fs.createReadStream(path.join(UPLOAD_PATH, image.filename)).pipe(res);
+        fs.createReadStream(path.join(__dirname + UPLOAD_PATH, image.filename)).pipe(res);
     })
 };
 
@@ -127,7 +127,7 @@ exports.deleteImgById = function(req, res, next) {
         if (err) return handleError(res, err);
         if (!image)return handleEntityNotFound(res, 'Image');
  
-        del([path.join(UPLOAD_PATH, image.filename)]).then(deleted => {
+        del([path.join(__dirname + UPLOAD_PATH, image.filename)]).then(deleted => {
             return res.status(200).send({message: 'User is successfully Deleted...'});
         })
     })

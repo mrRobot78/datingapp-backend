@@ -16,9 +16,9 @@ const bodyParser = require("body-parser");
 import multer from 'multer'
 import  cors from 'cors'
 const app = express();
- 
+
 // Generell properties
-export let UPLOAD_PATH = 'uploads'
+export let UPLOAD_PATH = '/uploads'
 // export let PORT = 3000;
 
 // app.use('/uploads', express.static('uploads'));
@@ -30,7 +30,7 @@ export let UPLOAD_PATH = 'uploads'
 // Multer Settings for file upload
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, UPLOAD_PATH)
+        cb(null, __dirname + UPLOAD_PATH)
     },
     filename: function (req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now())
